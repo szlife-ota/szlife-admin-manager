@@ -1,0 +1,26 @@
+steps:
+  # Dockerイメージをビルド
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'asia-northeast1-docker.pkg.dev/szlife-system-admin/admin-manager-repo/frontend-image', './frontend']
+
+  # アーティファクトレジストリへプッシュ
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia-northeast1-docker.pkg.dev/szlife-system-admin/admin-manager-repo/frontend-image']
+
+  # Cloud Runへデプロイ
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'admin-manager-frontend'
+      - '--image'
+      - 'asia-northeast1-docker.pkg.dev/szlife-system-admin/admin-manager-repo/frontend-image'
+      - '--region'
+      - 'asia-northeast1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+
+images:
+  - 'asia-northeast1-docker.pkg.dev/szlife-system-admin/admin-manager-repo/frontend-image'
