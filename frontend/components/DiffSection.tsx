@@ -1,37 +1,41 @@
-"use client"; // インタラクティブな動作のために必要
+"use client";
+import React from 'react';
+import { GitCommit, AlertTriangle } from 'lucide-react';
 
-export const DiffSection = () => {
+export default function DiffSection() {
   return (
-    <section className="space-y-4">
-      <div className="flex justify-between items-end">
-        <h2 className="text-lg font-bold border-l-4 border-rose-500 pl-3">AIコード生成と差分確認</h2>
-        <button className="bg-rose-600 hover:bg-rose-500 px-6 py-2 rounded-lg font-bold shadow-lg shadow-rose-900/40 transition-all active:scale-95 text-white">
-          GitHubへ保存（コミット）
+    <div className="flex flex-col h-full">
+      <header className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-bold">ネットワーク構築</h2>
+          <span className="px-2 py-1 rounded text-xs bg-yellow-900/30 text-yellow-400 border border-yellow-700/50 flex items-center gap-1">
+            <AlertTriangle size={12}/> 未同期の差分あり
+          </span>
+        </div>
+        <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm font-semibold">
+          <GitCommit size={18}/> GitHubへ保存
         </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 font-mono text-xs md:text-sm">
-        <div className="bg-slate-900 p-5 rounded-xl border border-rose-900/30 ring-1 ring-rose-500/20">
-          <p className="text-xs text-rose-400 mb-3 font-sans font-bold">✦ AI生成（設定書 Ver.2）</p>
-          <pre className="overflow-x-auto leading-relaxed">
-{`resource "google_project_service" "api" {
-  project = var.project_id
-  service = "cloudrun.googleapis.com"
-`}
-<span className="bg-red-900/50 text-red-200 block w-full px-1 font-bold">+ disable_on_destroy = false</span>
-{`}`}
+      </header>
+      <div className="flex-1 grid grid-cols-2 gap-px bg-slate-700 rounded-xl overflow-hidden border border-slate-700">
+        <div className="bg-slate-900 p-6 overflow-auto">
+          <p className="text-[10px] text-green-400 font-bold mb-4 uppercase">AI Proposed Plan</p>
+          <pre className="text-sm font-mono text-green-400 leading-relaxed">
+{`resource "google_compute_network" "vpc" {
++ name = "yogibo-vpc-main"
++ auto_create_subnetworks = false
+}`}
           </pre>
         </div>
-        <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 opacity-60">
-          <p className="text-xs text-slate-500 mb-3 font-sans">GitHub現行コード</p>
-          <pre className="overflow-x-auto leading-relaxed text-slate-400">
-{`resource "google_project_service" "api" {
-  project = var.project_id
-  service = "cloudrun.googleapis.com"
+        <div className="bg-slate-900 p-6 overflow-auto border-l border-slate-800 text-slate-500">
+          <p className="text-[10px] text-slate-500 font-bold mb-4 uppercase">Current GitHub</p>
+          <pre className="text-sm font-mono leading-relaxed">
+{`resource "google_compute_network" "vpc" {
+  name = "szlife-vpc"
+  auto_create_subnetworks = false
 }`}
           </pre>
         </div>
       </div>
-    </section>
+    </div>
   );
-};
+}
